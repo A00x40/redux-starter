@@ -1,7 +1,7 @@
 const initialState = []
 
-const lastId  = 0
-const reducer = (state = initialState , action) => {
+let lastId  = 0
+const reducer = (state = initialState, action) => {
     switch (action.type) {
         case "ADD_BUG":
             return [

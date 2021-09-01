@@ -1,0 +1,11 @@
+# Redux Starter Project
+
+A Bug resolver using redux
+
+## Development
+
+To get started developing right away:
+
+- install all project dependencies with npm install
+
+- start the development server with npm start
