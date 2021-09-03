@@ -1,13 +1,6 @@
 import store from './store'
 import * as actionCreators from './actionCreators'
 
-/** UI */
-const bugDescription = document.getElementById("bug")
-const bugAdd = document.getElementById("add-bug")
-
-const bugId = document.getElementById("bug-id")
-const bugRemove = document.getElementById("remove-bug")
-
 const bugList = document.getElementById("bug-list")
 const bugRender = () => {
     if(store.getState().length !== 0) {
@@ -28,20 +21,80 @@ const bugRender = () => {
 const unsubscribe = store.subscribe( () => {
     alert("Store Changed")
     console.log(store.getState())
-    bugRender()
+    //bugRender()
 })
 
-/** UI EVENTS */
-bugAdd.addEventListener( "click" , () => {
-    store.dispatch(actionCreators.addBug(bugDescription.value))
-})
-
-bugRemove.addEventListener( "click" , () => {
-    let id = bugId.value
-    var regex=/^[0-9]+$/;
-    if (id.match(regex)) {
-        store.dispatch(actionCreators.removeBug(parseInt(id)))
-    } else {
-        alert("Bug id must be a non negative number")
+class List extends React.Component {
+    
+    render() {
+        return (
+            <ul id="bug-list">
+                {
+                    this.props.bugs.map( (v,k) => {
+                    return(
+                        <li key={k}> {v.description} </li>
+                    )})
+                    
+                }
+            </ul>
+        )
     }
-})
+}
+class APP extends React.Component {
+    
+    constructor(props) {
+        super(props)
+        this.state = {
+            bugs: []
+        }
+    }
+
+    bugAdd () {
+        let e = document.getElementById("bug")
+        this.props.store.dispatch(actionCreators.addBug(e.value))
+        this.setState( () => ({
+            bugs : this.props.store.getState()
+        }))
+        e.value = ""
+    }
+
+    bugRemove () {
+        let e = document.getElementById("bug-id")
+        let id = e.value
+        var regex=/^[0-9]+$/;
+        if (id.match(regex)) {
+            this.props.store.dispatch(actionCreators.removeBug(parseInt(id)))
+        } else {
+            alert("Bug id must be a non negative number")
+        }
+        this.setState( () => ({
+            bugs : this.props.store.getState()
+        }))
+        e.value = ""
+    }
+
+    render() {
+        return (
+            <div>
+                <div>
+                <h2>Add Bug</h2>
+                <input id="bug" type="text" placeholder="description" />
+                <input id="add-bug" type="button" value="ADD BUG" onClick={() => this.bugAdd()} />
+
+                <List bugs={this.state.bugs}/>
+                </div>
+
+                <div>
+                <h2>Remove Bug</h2>
+                <input id="bug-id" type="text" placeholder="id" />
+                <input id="remove-bug" type="button" value="REMOVE BUG" onClick={() => this.bugRemove()}  />
+                </div>
+            </div>
+        )
+    }
+  }
+
+  ReactDOM.render( 
+    <APP store={store}/> ,
+    document.getElementById("app")
+  );
