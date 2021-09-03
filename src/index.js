@@ -33,11 +33,7 @@ const unsubscribe = store.subscribe( () => {
 
 /** UI EVENTS */
 bugAdd.addEventListener( "click" , () => {
-    if(bugDescription.value !== "") {
-        store.dispatch(actionCreators.addBug(bugDescription.value))
-    } else {
-        alert("Please Fill the description")
-    }
+    store.dispatch(actionCreators.addBug(bugDescription.value))
 })
 
 bugRemove.addEventListener( "click" , () => {
